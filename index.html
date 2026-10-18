@@ -62,7 +62,8 @@ button{font-family:'Russo One',sans-serif;cursor:pointer;border:0;color:#fff}
 .seat:nth-child(even){transform:rotate(1.6deg) translateY(4px)}
 .seat.act{filter:drop-shadow(0 0 14px #ffd24a)}
 .seat.act .avbox{transform:scale(1.08)}
-.seat.fold{opacity:.45;filter:grayscale(.75)}
+/* ИСПРАВЛЕНИЕ: прозрачность применяется к элементам внутри, а не ко всему блоку, чтобы баблы не тускнели */
+.seat.fold .avbox, .seat.fold .sname, .seat.fold .sres, .seat.fold .sbet, .seat.fold .minicards {opacity:.45;filter:grayscale(.75)}
 .seat.talk{animation:sj .45s}
 @keyframes sj{40%{margin-top:-9px}}
 .avbox{width:var(--av);height:var(--av);margin:0 auto;background:transparent;border:0;position:relative;filter:drop-shadow(0 6px 12px #000c)}
@@ -78,7 +79,9 @@ button{font-family:'Russo One',sans-serif;cursor:pointer;border:0;color:#fff}
 .mc{width:18px;height:26px;border-radius:3px;background:linear-gradient(#fff,#e8e8f0);color:#111;font-size:8px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .mc.back{background:repeating-linear-gradient(45deg,#8b1e2f,#8b1e2f 4px,#5e1420 4px,#5e1420 8px)}
 .mc.dead{opacity:.25;filter:grayscale(1)}
-.bubble{position:absolute;left:50%;bottom:102%;transform:translateX(-50%);background:#fff;color:#111;font-size:11px;padding:5px 9px;border-radius:12px;width:max-content;max-width:190px;z-index:30;box-shadow:0 6px 16px #000a;animation:pop .25s;font-weight:500}
+
+/* БАББЛЫ */
+.bubble{position:absolute;left:50%;bottom:102%;transform:translateX(-50%);background:#fff;color:#111;font-size:11.5px;padding:6px 10px;border-radius:12px;width:max-content;max-width:195px;z-index:9999;box-shadow:0 6px 16px #000a;animation:pop .25s;font-weight:500;opacity:1!important;filter:none!important;pointer-events:none}
 .bubble:after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff}
 @keyframes pop{from{transform:translateX(-50%) scale(.5);opacity:0}}
 
@@ -164,11 +167,18 @@ button{font-family:'Russo One',sans-serif;cursor:pointer;border:0;color:#fff}
 
 /* КОТ */
 #cat{position:absolute;left:6%;top:72%;z-index:33;pointer-events:none;text-align:center;width:clamp(84px,15vh,150px);--av:min(40px,5.5vh,7vw)}
-/* ✅ КОТ-КЛИК: включаем кликабельность только когда кот реально на столе */
 #cat:not(.hidden){pointer-events:auto;cursor:pointer}
 #cat .cbody,#cat svg,#cat svg *{pointer-events:auto !important}
-#cat.cat-clicked .cbody{animation:catBounce .32s ease-out}
-@keyframes catBounce{0%{transform:scale(1)}35%{transform:scale(1.15) rotate(-3deg)}70%{transform:scale(.95)}100%{transform:scale(1)}}
+/* ИСПРАВЛЕНИЕ: кот теперь будет резко дергаться при клике */
+#cat.cat-clicked .cbody{animation:catTwitch .3s ease-in-out !important}
+@keyframes catTwitch{
+    0%{transform:rotate(0deg) scale(1);}
+    20%{transform:rotate(-10deg) scale(1.1);}
+    40%{transform:rotate(10deg) scale(0.95);}
+    60%{transform:rotate(-5deg) scale(1.05);}
+    80%{transform:rotate(5deg) scale(0.98);}
+    100%{transform:rotate(0deg) scale(1);}
+}
 .cbody{position:relative;filter:drop-shadow(0 6px 8px #000a)}
 .cbody svg{width:100%;height:auto;display:block;overflow:visible}
 .cshadow{width:64%;height:7px;background:#0007;border-radius:50%;margin:2px auto 0;filter:blur(2px)}
@@ -285,8 +295,15 @@ button{font-family:'Russo One',sans-serif;cursor:pointer;border:0;color:#fff}
     #side.open{transform:translateY(0)}
     #sideToggle{display:inline-block}
     :root{--av:min(88px,12vh,22vw)}
-    #top{padding:4px 7px;gap:5px}#top .brand{font-size:11px}#roundInfo{font-size:9px}#timerWrap{font-size:10px}
+    
+    /* СЖИМАЕМ ШАПКУ */
+    #top{padding:4px 7px;gap:5px}
+    #scoreStrip{display:none!important} 
+    #top .brand{font-size:11px}
+    #roundInfo{font-size:9px}
+    #timerWrap{font-size:10px}
     .icobtn{width:29px;height:29px;font-size:13px}
+    
     .seat{max-width:none;padding:1px}.sname{font-size:9px}.sres{font-size:8px}.sbet{font-size:8px}.sst{display:none}
     .cbadge{font-size:11px}.minicards{min-height:19px}.mc{width:13px;height:19px;font-size:6px}
     .bubble{max-width:125px;font-size:10px}
@@ -302,7 +319,18 @@ button{font-family:'Russo One',sans-serif;cursor:pointer;border:0;color:#fff}
     .btn{padding:7px 8px;font-size:10.5px}.btn.small{padding:5px 7px;font-size:9.5px}
     #curSel button{width:34px;height:29px;font-size:13px}#slider{width:30vw}#sliderVal{font-size:9.5px;min-width:58px}
     .chatb{padding:3px 6px;font-size:11px}
-    .box{padding:11px}.resTable{font-size:10px}.resTable td,.resTable th{padding:3px}
+    
+    /* СЖИМАЕМ ОКНА РЕЗУЛЬТАТОВ */
+    .box{padding:10px;max-height:96vh}
+    .box h2{font-size:16px;margin-bottom:5px}
+    .box p{font-size:11px;margin:4px 0}
+    .resTable{font-size:10px}
+    .resTable td,.resTable th{padding:2px}
+    .handRow .card{width:28px;height:40px;border-radius:4px}
+    .handRow .card .big{font-size:14px}
+    .handRow .card .r{font-size:8px;top:2px;left:2px}
+    .titleBadge{font-size:10px;padding:3px 6px}
+    
     .splash{font-size:clamp(18px,7vw,32px)}
 }
 @media(max-width:430px){.sres{display:none}.seat{max-width:25vw}#myRes{max-width:52vw}.card{width:44px;height:64px}.card .big{font-size:18px}.card .s{display:none}#myCards{min-height:68px}:root{--av:min(74px,11vh,24vw)}}
@@ -384,7 +412,7 @@ button{font-family:'Russo One',sans-serif;cursor:pointer;border:0;color:#fff}
                 <div class="rshadow"></div><div class="rlabel">БЕЗУМНЫЙ ПЕТУХ</div>
             </div>
 
-            <!-- ✅ КОТ-КЛИК: добавлен контейнер .emotes для эмодзи при клике -->
+            <!-- КОТ -->
             <div id="cat" class="hidden">
                 <div class="cbody">
                     <div class="emotes"></div>
@@ -484,7 +512,6 @@ var MODES={
 };
 var G_selectedMode='classic';
 
-/* ✅ КОТ-КЛИК: добавлен hiss (третий звук для кота) */
 var SFX={
     on:true,ctx:null,
     ac:function(){if(!this.ctx){try{this.ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume();return this.ctx},
@@ -497,33 +524,27 @@ var SFX={
     meow:function(){
     var c=this.ac();if(!c||!this.on)return;
     var t0=c.currentTime,dur=0.65;
-    // Основной тон: плавный контур кошки
     var o=c.createOscillator();o.type='sawtooth';
     o.frequency.setValueAtTime(520,t0);
     o.frequency.linearRampToValueAtTime(780,t0+0.1);
     o.frequency.linearRampToValueAtTime(720,t0+0.28);
     o.frequency.linearRampToValueAtTime(420,t0+dur);
-    // Вибрато — тремор голоса
     var vib=c.createOscillator(),vibG=c.createGain();
     vib.type='sine';vib.frequency.value=20;vibG.gain.value=22;
     vib.connect(vibG);vibG.connect(o.frequency);
-    // Формант F2 — СЕКРЕТ МЯУ: «и» (2200) → «ау» (900→700)
     var f2=c.createBiquadFilter();f2.type='bandpass';f2.Q.value=6;
     f2.frequency.setValueAtTime(2200,t0);
     f2.frequency.exponentialRampToValueAtTime(900,t0+dur*0.7);
     f2.frequency.exponentialRampToValueAtTime(700,t0+dur);
-    // Формант F1 — низкий, тоже плывёт
     var f1=c.createBiquadFilter();f1.type='bandpass';f1.Q.value=5;
     f1.frequency.setValueAtTime(400,t0);
     f1.frequency.linearRampToValueAtTime(700,t0+dur*0.6);
     f1.frequency.linearRampToValueAtTime(550,t0+dur);
-    // Огибающая: мягкая атака, плато, затухание
     var g=c.createGain();
     g.gain.setValueAtTime(0.0001,t0);
     g.gain.linearRampToValueAtTime(0.4,t0+0.04);
     g.gain.linearRampToValueAtTime(0.32,t0+0.35);
     g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
-    // Микс: сухой сигнал + два форманта в параллель
     var dry=c.createGain();dry.gain.value=0.15;
     var f2g=c.createGain();f2g.gain.value=1.5;
     var f1g=c.createGain();f1g.gain.value=1.2;
@@ -537,18 +558,14 @@ var SFX={
 purr:function(){
     var c=this.ac();if(!c||!this.on)return;
     var t0=c.currentTime,dur=1.4;
-    // Низкое рычание
     var o=c.createOscillator();o.type='sawtooth';
     o.frequency.setValueAtTime(48,t0);
     o.frequency.linearRampToValueAtTime(42,t0+dur);
-    // Амплитудная модуляция ~25 Гц — это «вибрация» мурчания
     var am=c.createOscillator();am.type='sine';am.frequency.value=25;
     var amG=c.createGain();amG.gain.value=0.5;
     var amCarrier=c.createGain();amCarrier.gain.value=0.5;
     am.connect(amG);amG.connect(amCarrier.gain);
-    // Низкочастотный фильтр — убирает «жужжание», оставляет рокот
     var lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=280;lp.Q.value=1;
-    // Огибающая
     var g=c.createGain();
     g.gain.setValueAtTime(0.0001,t0);
     g.gain.linearRampToValueAtTime(0.4,t0+0.12);
@@ -561,14 +578,11 @@ purr:function(){
 hiss:function(){
     var c=this.ac();if(!c||!this.on)return;
     var t0=c.currentTime,dur=0.5;
-    // Шумовой всплеск
     var len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0),i;
     for(i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);
     var s=c.createBufferSource();s.buffer=buf;
-    // Highpass + пик на 6 кГц — характерное «фф» кошки
     var hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=3000;hp.Q.value=0.7;
     var peak=c.createBiquadFilter();peak.type='peaking';peak.frequency.value=6000;peak.gain.value=8;peak.Q.value=2;
-    // Резкая атака, быстрый спад
     var g=c.createGain();
     g.gain.setValueAtTime(0.0001,t0);
     g.gain.linearRampToValueAtTime(0.35,t0+0.02);
@@ -624,7 +638,34 @@ var CURSE_KEYS=Object.keys(CURSES);
 var CHEATS=[{id:'peek',e:'👀',n:'Подсмотреть',cost:1,risk:.2,d:'Рука бота.'},{id:'swapc',e:'🔄',n:'Подменить',cost:3,risk:.4,d:'Свежая карта.'},{id:'hidec',e:'🎩',n:'Спрятать',cost:2,risk:.15,d:'Карта скрыта.'},{id:'steal',e:'🐍',n:'Украсть',cost:2,risk:.3,d:'Монеты бота.'},{id:'destroy',e:'💥',n:'Сбросить',cost:5,risk:.5,d:'Карта бота.'},{id:'redeal',e:'🎲',n:'Новая рука',cost:1,risk:.1,d:'10% та же.'}];
 var PERS={borya:{tag:'уверен',bias:.42,allin:.55},lusya:{tag:'паникёрша',bias:-.18,allin:.03},gosha:{tag:'философ',bias:.05,allin:.12},zina:{tag:'бабушка',bias:.1,allin:.3}};
 var BOTLIST=[{name:'Боря',pers:'borya',avIdx:0},{name:'Люся',pers:'lusya',avIdx:1},{name:'Гоша',pers:'gosha',avIdx:2},{name:'Тётя Зина',pers:'zina',avIdx:3}];
-var LINES={borya:{raise:['All-in!','Монстры!','Ставлю всё!'],call:['Захожу!','Уверенно.'],fold:['Ладно.','Пас.'],check:['Выиграл.','Разминка.']},lusya:{raise:['Ой!','ФЛЕШ!'],call:['Дёшево...','Колл.'],fold:['Я пас!','Мусор!'],check:['Посижу.','Страшно.']},gosha:{raise:['Ибо неизбежность.','Суета.'],call:['Принимаю.','Эхо.'],fold:['Тишина.','В себя.'],check:['Наблюдаю.','Молчание.']},zina:{raise:['РИСКНИ!','Пиццу!'],call:['Поддержу!','Тоже!'],fold:['Не моё.','Пас.'],check:['Удача?','Крутитесь!']}};
+
+var LINES={
+    borya:{
+        raise:['All-in!', 'Монстры!', 'Ставлю всё!', 'Смотри и учись.', 'Я тут главный, ясно?', 'Собирай монеты, я забираю банк.', 'Слишком просто.', 'Даже не пытайся.', 'Мои карты лучше твоих.', 'Я тут по жизни олл-ин.', 'Хватит тянуть время!'],
+        call:['Захожу!', 'Уверенно.', 'Я вижу твой страх.', 'Ладно, посмотрим.', 'Неплохо, но мало.', 'Думаешь, ты умнее меня?', 'Блефуешь, голубчик.', 'Поддерживаю.', 'Легкие деньги.'],
+        fold:['Ладно.', 'Пас.', 'Мусор.', 'Забирай, мне лень.', 'Блеф не пройдет.', 'Ну и подавись.', 'Скучно вы играете.', 'Оставляю тебе.', 'Не мой день.'],
+        check:['Выиграл.', 'Разминка.', 'Твоя очередь.', 'Скучно.', 'Ну и что дальше?', 'Я просто наблюдаю.', 'Ход твой, чего замер?', 'Пропускаю.', 'Давай уже.']
+    },
+    lusya:{
+        raise:['Ой!', 'ФЛЕШ!', 'Я боюсь! Но ставлю!', 'Не смотрите на меня так!', 'Мамочки, я в игре!', 'А если я проиграю?', 'Всё или ничего!', 'Ой, кажется, мне везет?', 'Не смотри на меня!'],
+        call:['Дёшево...', 'Колл.', 'Ладно, уговорили.', 'Я просто посмотрю.', 'Ох, сердце колотится.', 'Может, пас? Нет, колл.', 'Ну хорошо.', 'Держите меня.'],
+        fold:['Я пас!', 'Мусор!', 'Не хочу!', 'Страшно!', 'Забирайте всё!', 'Я лучше пиццу поем.', 'Ой, всё, я устала.', 'Я лучше в домино.', 'Ужас какой.'],
+        check:['Посижу.', 'Страшно.', 'Пропускаю?', 'Ну ладно.', 'Ой, а что делать?', 'Я лучше промолчу.', 'Так, спокойно.', 'Ход твой.']
+    },
+    gosha:{
+        raise:['Ибо неизбежность.', 'Суета.', 'Математика на моей стороне.', 'Шансы 87.4%.', 'Это не блеф, это расчет.', 'Иллюзия выбора.', 'Ваша ставка — погрешность.', 'Хаос предрешен.', 'Я просто наблюдаю за энтропией.'],
+        call:['Принимаю.', 'Эхо.', 'Допустимо.', 'Теоретически.', 'Пусть будет так.', 'Согласен с теорией вероятностей.', 'Рационально.', 'В пределах нормы.'],
+        fold:['Тишина.', 'В себя.', 'Иррационально.', 'Шансов нет.', 'Я выхожу из уравнения.', 'Это тупик.', 'Логика подсказывает пас.', 'Слишком много переменных.'],
+        check:['Наблюдаю.', 'Молчание.', 'Константа.', 'Ход.', 'Пауза.', 'Ожидание.', 'Квантовое бездействие.', 'Просто есть.']
+    },
+    zina:{
+        raise:['РИСКНИ!', 'Пиццу!', 'Я тебе покажу, внучок!', 'В мои годы не боятся!', 'А ну, подвинься!', 'Сейчас бабушка покажет козырную!', 'Ох, разошлась!', 'Вот в наше время...'],
+        call:['Поддержу!', 'Тоже!', 'Куда мне до вас.', 'Ладно, внучок.', 'Скидку сделаешь?', 'Внучок, не жадничай.', 'Играем.', 'А вот в наше время...'],
+        fold:['Не моё.', 'Пас.', 'Удача?', 'Крутитесь!', 'Ой, давление!', 'Я лучше семечки полущу.', 'Да ну вас.', 'Где мои очки?'],
+        check:['Удача?', 'Крутитесь!', 'Семечки будете?', 'А я вам пирожков принесла.', 'Ход твой, милок.', 'Очки где мои?', 'Подожду.', 'А пицца будет?']
+    }
+};
+
 var EMOJI_TALK=['🤐','😱','🤔','','','🙏','😤','🥶','',''];
 var HUMAN_CHAT=['😏 Ну-ну...','🤬 Вы издеваетесь!','🙏 Ну пожалуйста','🍕 Кто хочет пиццу?','😎 Я всё знаю','🐔 Кудах-кудах'];
 var EMOTES={think:'🤔',rage:'😤',angry:'🤬',shock:'😱',laugh:'😂',cool:'😎',cry:'😭',crazy:'🤪',sleep:'😴',money:'🤑',love:'🥰',sick:'🤢',wow:'🤯',fire:'🔥',pizza:'🍕',skull:'💀',heart:'💖',zzz:'💤',clown:'🤡',devil:'😈'};
@@ -649,7 +690,7 @@ var AV={
 var HAT_SVG='<svg viewBox="0 0 100 100"><path d="M12 82 Q50 92 88 82 L84 74 Q50 84 16 74Z" fill="#1a1a24"/><rect x="26" y="24" width="48" height="52" rx="6" fill="#15151f"/><rect x="26" y="58" width="48" height="11" fill="#ffc93c"/><ellipse cx="50" cy="25" rx="24" ry="7" fill="#2a2a3a"/><rect x="38" y="4" width="13" height="19" rx="2" fill="#fff" transform="rotate(-18 44 13)"/><rect x="54" y="2" width="13" height="19" rx="2" fill="#fff" transform="rotate(16 60 11)"/></svg>';
 
 var G=null,uid=0,MODE=null,humanRes=null,humanTmr=null,roosterIdle=null;
-function newPlayer(n,p,ai,h){return{name:n,pers:p,av:h?AV.human:AV[AVKEYS[ai]],human:!!h,coins:100*MODE.mult,seconds:90,pizza:8,brains:3,bones:3,crazy:0,hand:[],bet:0,totalBet:0,folded:false,allIn:false,out:0,curses:[],streakW:0,streakL:0,mood:0,seenBy:null,skip:false,lastAct:0,_cur:'coins',_face:null,_faceUntil:0}}
+function newPlayer(n,p,ai,h){return{name:n,pers:p,av:h?AV.human:AV[AVKEYS[ai]],human:!!h,coins:100*MODE.mult,seconds:90,pizza:8,brains:3,bones:3,crazy:0,hand:[],bet:0,totalBet:0,folded:false,allIn:false,out:0,curses:[],streakW:0,streakL:0,mood:0,seenBy:null,skip:false,lastAct:0,_cur:'coins',_face:null,_faceUntil:0,_bubbleText:null,_bubbleUntil:0}}
 function absurd(p){return Math.max(0,Math.round(p.coins+p.seconds*2+p.pizza*5+p.brains*8+p.bones*10+p.crazy))}
 function setFace(p,f,ms){var el=p.human?$('#meBox'):p._el;if(!el)return;['joy','angry','shock','sly'].forEach(function(x){el.classList.remove('f-'+x)});el.classList.add('f-'+f);p._face=f;p._faceUntil=Date.now()+(ms||2600);clearTimeout(p._ft);p._ft=setTimeout(function(){el.classList.remove('f-'+f);p._face=null},ms||2600)}
 function emoteInto(b,k,ms){if(!b)return;while(b.children.length>=2)b.removeChild(b.firstChild);var d=document.createElement('div');d.className='emote em-'+k;d.textContent=EMOTES[k]||'❓';b.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove()},ms||2800)}
@@ -726,8 +767,36 @@ function logMsg(w,t,c){var l=$('#log');if(!l)return;var d=document.createElement
 function sys(t){logMsg('',t,'sys')}
 function dlr(t){logMsg('🎩 Дилер',t,'dlr')}
 function rst(t){logMsg('',t,'rst')}
-function bubble(p,t){var s=p.human?$('#meBox'):p._el;if(!s)return;var o=s.querySelector('.bubble');if(o)o.remove();var b=document.createElement('div');b.className='bubble';b.textContent=t;s.appendChild(b);s.classList.add('talk');setTimeout(function(){s.classList.remove('talk')},450);clearTimeout(p._bt);p._bt=setTimeout(function(){if(b.parentNode)b.remove()},3200)}
-function say(p,t){var m=G.mod;if((m&&m.id==='silence')||p.curses.indexOf('mute')>=0)t=pick(EMOJI_TALK);if(p.curses.indexOf('chicken')>=0&&!(m&&m.id==='silence'))t='Кудах-кудах! '+t;bubble(p,t);logMsg(p.name,t);if(p.curses.indexOf('chicken')>=0&&!p.human)SFX.cluck()}
+
+function bubble(p,t){
+    if(p.human){
+        var s=$('#meBox');
+        if(!s)return;
+        var o=s.querySelector('.bubble');if(o)o.remove();
+        var b=document.createElement('div');b.className='bubble';b.textContent=t;s.appendChild(b);
+        s.classList.add('talk');setTimeout(function(){s.classList.remove('talk')},450);
+        clearTimeout(p._bt);p._bt=setTimeout(function(){if(b.parentNode)b.remove()},7000);
+    } else {
+        p._bubbleText = t;
+        p._bubbleUntil = Date.now() + 7000; // 7 секунд
+        renderSeats();
+        clearTimeout(p._bt);
+        p._bt = setTimeout(function(){
+            if(p._bubbleUntil <= Date.now()){
+                p._bubbleText = null;
+                renderSeats();
+            }
+        }, 7200);
+    }
+}
+function say(p,t){
+    var m=G.mod;
+    if((m&&m.id==='silence')||p.curses.indexOf('mute')>=0)t=pick(EMOJI_TALK);
+    if(p.curses.indexOf('chicken')>=0&&!(m&&m.id==='silence'))t='Кудах-кудах! '+t;
+    bubble(p,t);
+    logMsg(p.name,t);
+    if(p.curses.indexOf('chicken')>=0&&!p.human)SFX.cluck()
+}
 
 function cardEl(c,up){var d=document.createElement('div');d.className='card'+(c.effect?' effc':'');if(!up){d.classList.add('back');return d}if(c.effect){var E=EFFECTS[c.effect];d.innerHTML='<div class="big">'+E.e+'</div><div class="eff">'+E.n.toUpperCase()+'</div>'}else{var col=RED[c.suit]?'#c0392b':'#111';d.innerHTML='<div class="r" style="color:'+col+'">'+rl(c.rank)+'</div><div class="s" style="color:'+col+'">'+c.suit+'</div><div class="big" style="color:'+col+'">'+c.suit+'</div>'}if(!c.alive)d.classList.add('dead');if(c.hidden)d.classList.add('hid');return d}
 function miniCard(c,up){var d=document.createElement('div');d.className='mc'+(up?'':' back')+(c.alive?'':' dead');if(up){if(c.effect)d.textContent=EFFECTS[c.effect].e;else{var col=RED[c.suit]?'#c0392b':'#111';d.innerHTML='<span style="color:'+col+'">'+rl(c.rank)+'</span><span style="color:'+col+';font-size:7px">'+c.suit+'</span>'}}return d}
@@ -749,6 +818,12 @@ function renderSeats(){
         var h='<div class="avbox">'+p.av+'</div><div class="sname" style="color:'+bc+'">'+p.name+' '+mo+ou+'</div><div class="sres">🪙'+p.coins+' ⏱️'+p.seconds+' 🍕'+p.pizza+' 🦴'+p.bones+'</div>';
         if(p.bet>0)h+='<div class="sbet">ставка '+p.bet+'</div>';
         h+='<div class="sst">'+st+'</div><div class="curseRow">'+p.curses.map(function(c){return'<span class="cbadge" title="'+CURSES[c].n+'">'+CURSES[c].e+'</span>'}).join('')+'</div><div class="minicards">'+p.hand.map(function(c){return miniCard(c,show).outerHTML}).join('')+'</div>';
+        
+        // Восстанавливаем баббл
+        if(p._bubbleText && Date.now() < p._bubbleUntil) {
+            h += '<div class="bubble">' + p._bubbleText + '</div>';
+        }
+
         el.innerHTML=h;
         if(keep){var a=el.querySelector('.avbox');if(a)a.appendChild(keep)}
     });
@@ -872,7 +947,6 @@ function startCatIdle(){
     clearInterval(G._cw);
     G._cw=setInterval(function(){
         if(G&&G.catHere&&G.phase!=='end'&&chance(.5)){
-            SFX.purr();
             var z=$('#cat .zzz');
             if(z){z.style.animation='none';void z.offsetWidth;z.style.animation=''}
         }
@@ -1017,7 +1091,7 @@ async function playRound(){
     sys('━━━━ РАУНД '+G.round+' ━━━━');
     G.players.forEach(function(p){
         if(p.out>0){p.folded=true;return}
-        p.hand=[];p.bet=0;p.totalBet=0;p.folded=false;p.allIn=false;p.seenBy=null;p.skip=false;
+        p.hand=[];p.bet=0;p.totalBet=0;p.folded=false;p.allIn=false;p.seenBy=null;p.skip=false;p._bubbleText=null;
         if(p.coins<5){p.coins+=40*MODE.mult;dlr(p.name+', держу в долг. Не привыкай.')}
     });
     var ante=5*MODE.mult;
@@ -1102,16 +1176,22 @@ function startRoundTimer(){
 }
 
 async function interlude(){
-    if(!chance(.45))return;
+    if(!chance(.65))return; 
     var act=G.players.filter(function(p){return!p.human&&p.out<=0});
     if(act.length<2)return;
     var a=pick(act),b=pick(act);
     while(b===a)b=pick(act);
-    var r=rnd(1,5);
-    if(r===1){say(a,b.name+', ты жульничал!');emote(a,'rage');emote(b,'laugh');await sleep(900);say(b,'Это стратегия.')}
-    else if(r===2){say(a,'Я за тебя.');emote(a,'heart');await sleep(800);say(b,'Сговор? Мило.')}
+    var r=rnd(1,10); // Увеличили количество сценариев
+    
+    if(r===1){say(a,b.name+', ты жульничал!');emote(a,'rage');await sleep(900);say(b,'Это стратегия, дубина.')}
+    else if(r===2){say(a,'Я за тебя.');emote(a,'heart');await sleep(800);say(b,'Сговор? Мило. Но я тебя всё равно обчищу.')}
     else if(r===3){say(a,'Я ЗА ПИЦЦЕЙ!');a.out=rnd(1,2);emote(a,'pizza',2600);sys('🍕 '+a.name+' ушёл за пиццей на '+a.out+' раунд(а).');await sleep(500)}
-    else if(r===4){say(a,'Я просто бот с травмой.');emote(a,'cry');await sleep(700)}
+    else if(r===4){say(a,'Я просто бот с травмой.');emote(a,'cry');await sleep(700);say(b,'Травма у тебя от того, что я тебя переигрываю.')}
+    else if(r===5){say(a,pick(['Шляпа у Дилера бракованная.','Петух сегодня злой.','Светло-фиолетовый кот — это заговор.']));emote(a,'think');await sleep(800);say(b,pick(['Заткнись и играй.','Не накликай!','Я его боюсь.']))}
+    else if(r===6){say(a,'У тебя лицо как у проигравшего.');emote(a,'laugh');await sleep(700);say(b,'Посмотрим, кто смеяться будет.')}
+    else if(r===7){say(a,'Дилер, а можно мне туз?');emote(a,'pray');await sleep(800);say(b,'Он тебе даст... дырку от бублика.')}
+    else if(r===8){say(a,'Кот спит, а мы тут страдаем.');emote(a,'sleep');await sleep(700);say(b,'Разбуди его, и я тебя стукну.')}
+    else if(r===9){say(a,'В прошлый раз тут был другой стол.');emote(a,'wow');await sleep(700);say(b,'Ты просто пьян, бот.')}
     else{sys('🤝 '+a.name+' и '+b.name+' мирятся. Оба врут.');emote(a,'love');emote(b,'love');await sleep(600)}
     renderSeats()
 }
@@ -1193,7 +1273,21 @@ async function applyAction(p,d){
     var paid=0;
     if(d.act==='call'){paid=payChips(p,cur,tc);SFX.chip()}
     else if(d.act==='raise'){paid=payChips(p,cur,tc+(d.amt||5)*RATE[cur]);G.currentBet=p.bet;SFX.chip();G.raises++}
-    else if(d.act==='allin'){paid=payChips(p,cur,maxChips(p,cur));G.currentBet=Math.max(G.currentBet,p.bet);p.allIn=true;SFX.boom();if(p.human){G.stats.allin++;G.stats.allinRun++;G.stats.bestAllins=Math.max(G.stats.bestAllins,G.stats.allinRun);p.crazy+=5}else p.crazy+=3}
+    else if(d.act==='allin'){
+        paid=payChips(p,cur,maxChips(p,cur));G.currentBet=Math.max(G.currentBet,p.bet);p.allIn=true;SFX.boom();
+        if(p.human){G.stats.allin++;G.stats.allinRun++;G.stats.bestAllins=Math.max(G.stats.bestAllins,G.stats.allinRun);p.crazy+=5}else p.crazy+=3;
+        // Реакция ботов на чужой олл-ин
+        if(!p.human || p.human) {
+            G.players.forEach(function(x){
+                if(!x.human && x!==p && x.out<=0 && chance(0.4)){
+                    setTimeout(function(){
+                        say(x, pick(['Ого!', 'Смело.', 'Псих!', 'С ума сошёл?', 'Ну и дела...', 'Я пас в шоке.', 'Бабушка, ты видела?']));
+                        emote(x, pick(['shock','wow','cry','think']), 2000);
+                    }, rnd(500, 1500));
+                }
+            });
+        }
+    }
     else if(d.act==='fold'){p.folded=true;SFX.lose();if(p.human)G.stats.allinRun=0}
     if(paid>0)flyPay(p,cur==='pizza'?'🍕':cur==='seconds'?'⏱️':'🪙');
     if(p.coins<=0&&p.seconds<=0&&p.pizza<=0)p.allIn=true;
@@ -1224,7 +1318,10 @@ async function turn(p){
         else if(chance(.45))emote(p,'sleep',2000)
     }
     await applyAction(p,d);
-    if(!(d.act==='check'&&chance(.4)))say(p,botLine(p,d.act,d));
+    // Боты теперь говорят с шансом 90%, а на Рейз/Олл-ин — всегда
+    if(d.act==='raise'||d.act==='allin'||chance(0.9)) {
+        say(p,botLine(p,d.act,d));
+    }
     if(p.human&&d.act==='allin'&&G.stats.allinRun>=3)sys('🃏 '+G.stats.allinRun+' олл-инов подряд!');
     G.cur=null;renderSeats();
     await sleep(p.human?180:300)
@@ -1636,14 +1733,12 @@ function bindGame(){
     document.addEventListener('pointerdown',function(){SFX.ac()},{once:true});
     setInterval(function(){if(G&&humanRes&&G.human.curses.indexOf('snail')>=0)updateActions()},500);
 
-    /* ✅ КОТ-КЛИК: обработчик клика — мяу/мур/фыр + bounce + эмодзи */
     var catEl=document.getElementById('cat');
     if(catEl){
         catEl.addEventListener('click',function(ev){
             ev.stopPropagation();
             var cat=this;
             if(cat.classList.contains('hidden'))return;
-            console.log('[cat] click detected, playing sound');
             var sounds=['meow','purr','hiss'];
             var s=pick(sounds);
             try{ SFX[s](); }catch(err){ console.warn('SFX error:',err); }
@@ -1656,9 +1751,6 @@ function bindGame(){
                 emoteInto(emoBox,pick(['love','sleep','laugh','shock','heart','wow']),900);
             }
         });
-        console.log('[cat] click handler bound');
-    }else{
-        console.warn('[cat] element not found');
     }
 }
 
